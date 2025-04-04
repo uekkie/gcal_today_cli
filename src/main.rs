@@ -63,12 +63,14 @@ async fn main() {
                     println!("今日の予定はありません。");
                 } else {
                     for event in items {
-                        println!("予定: {}", event.summary.unwrap_or("無題".to_string()));
+                        println!("{}", event.summary.unwrap_or("無題".to_string()));
                         if let Some(start) = event.start {
+                            
                             if let Some(start_time) = start.date_time {
-                                println!("開始時間: {}", start_time);
-                            } else {
-                                println!("開始時間: 不明");
+                                // UTC の DateTime を JST（日本標準時）に変換
+                                let jst_time = start_time.with_timezone(&chrono::FixedOffset::east(9 * 3600));
+                                let custom_format = jst_time.format("%Y/%m/%d %H:%M").to_string();
+                                println!("{}",custom_format);
                             }
                         }
                         println!(); // 改行
